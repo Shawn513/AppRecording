@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>貓</char>
+        <vowel>m</vowel>
+        <consonant>aau</consonant>
+    </word>
+
+    <word>
+        <char>包</char>
+        <vowel>b</vowel>
+        <consonant>aau</consonant>
+    </word>
+
+    <word>
+        <char>唞</char>
+        <vowel>t</vowel>
+        <consonant>au</consonant>
+    </word>
+
+    <word>
+        <char>袋</char>
+        <vowel>d</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+    <word>
+        <char>菇</char>
+        <vowel>g</vowel>
+        <consonant>u</consonant>
+    </word>
+
+    <word>
+        <char>丫</char>
+        <vowel>a</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>采</char>
+        <vowel>c</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+    <word>
+        <char>搾</char>
+        <vowel>z</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>六</char>
+        <vowel>l</vowel>
+        <consonant>uk</consonant>
+    </word>
+
+    <word>
+        <char>紐</char>
+        <vowel>n</vowel>
+        <consonant>au</consonant>
+    </word>
+
+</resources>

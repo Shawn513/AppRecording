@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>魔</char>
+        <vowel>m</vowel>
+        <consonant>o</consonant>
+    </word>
+
+    <word>
+        <char>卡</char>
+        <vowel>k</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>波</char>
+        <vowel>b</vowel>
+        <consonant>o</consonant>
+    </word>
+
+    <word>
+        <char>梯</char>
+        <vowel>t</vowel>
+        <consonant>ai</consonant>
+    </word>
+
+    <word>
+        <char>燈</char>
+        <vowel>d</vowel>
+        <consonant>ang</consonant>
+    </word>
+
+    <word>
+        <char>希</char>
+        <vowel>h</vowel>
+        <consonant>ei</consonant>
+    </word>
+
+    <word>
+        <char>瓜</char>
+        <vowel>gw</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>遮</char>
+        <vowel>z</vowel>
+        <consonant>e</consonant>
+    </word>
+
+    <word>
+        <char>料</char>
+        <vowel>l</vowel>
+        <consonant>iu</consonant>
+    </word>
+
+</resources>

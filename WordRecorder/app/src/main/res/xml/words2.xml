@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>卑</char>
+        <vowel>b</vowel>
+        <consonant>ei</consonant>
+    </word>
+
+    <word>
+        <char>羹</char>
+        <vowel>g</vowel>
+        <consonant>ang</consonant>
+    </word>
+
+    <word>
+        <char>掂</char>
+        <vowel>d</vowel>
+        <consonant>im</consonant>
+    </word>
+
+    <word>
+        <char>媽</char>
+        <vowel>m</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>掂</char>
+        <vowel>t</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+    <word>
+        <char>富</char>
+        <vowel>f</vowel>
+        <consonant>u</consonant>
+    </word>
+
+    <word>
+        <char>些</char>
+        <vowel>s</vowel>
+        <consonant>e</consonant>
+    </word>
+
+    <word>
+        <char>侵</char>
+        <vowel>c</vowel>
+        <consonant>am</consonant>
+    </word>
+
+    <word>
+        <char>落</char>
+        <vowel>l</vowel>
+        <consonant>ok</consonant>
+    </word>
+
+    <word>
+        <char>內</char>
+        <vowel>n</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+</resources>

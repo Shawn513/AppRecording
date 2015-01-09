@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>跌</char>
+        <vowel>d</vowel>
+        <consonant>it</consonant>
+    </word>
+
+    <word>
+        <char>跛</char>
+        <vowel>p</vowel>
+        <consonant>ai</consonant>
+    </word>
+
+    <word>
+        <char>面</char>
+        <vowel>m</vowel>
+        <consonant>in</consonant>
+    </word>
+
+    <word>
+        <char>改</char>
+        <vowel>g</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+    <word>
+        <char>大</char>
+        <vowel>d</vowel>
+        <consonant>aai</consonant>
+    </word>
+
+    <word>
+        <char>獻</char>
+        <vowel>h</vowel>
+        <consonant>in</consonant>
+    </word>
+
+    <word>
+        <char>花</char>
+        <vowel>f</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>咀</char>
+        <vowel>z</vowel>
+        <consonant>eoi</consonant>
+    </word>
+
+    <word>
+        <char>羊</char>
+        <vowel>j</vowel>
+        <consonant>oeng</consonant>
+    </word>
+
+    <word>
+        <char>曖</char>
+        <vowel>ny</vowel>
+        <consonant>un</consonant>
+    </word>
+
+</resources>

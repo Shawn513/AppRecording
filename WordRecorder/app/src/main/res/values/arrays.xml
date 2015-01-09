@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="wordSets">
+        <item>@xml/words0</item>
+        <item>@xml/words1</item>
+        <item>@xml/words2</item>
+        <item>@xml/words3</item>
+        <item>@xml/words4</item>
+        <item>@xml/words5</item>
+        <item>@xml/words6</item>
+        <item>@xml/words7</item>
+        <item>@xml/words8</item>
+        <item>@xml/words9</item>
+        <item>@xml/words10</item>
+        <item>@xml/words11</item>
+        <item>@xml/words12</item>
+        <item>@xml/words13</item>
+    </array>
+</resources>

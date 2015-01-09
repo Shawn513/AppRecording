@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>讀</char>
+        <vowel>d</vowel>
+        <consonant>uk</consonant>
+    </word>
+
+    <word>
+        <char>白</char>
+        <vowel>b</vowel>
+        <consonant>aak</consonant>
+    </word>
+
+    <word>
+        <char>鐡</char>
+        <vowel>t</vowel>
+        <consonant>it</consonant>
+    </word>
+
+    <word>
+        <char>哥</char>
+        <vowel>g</vowel>
+        <consonant>o</consonant>
+    </word>
+
+    <word>
+        <char>裙</char>
+        <vowel>kw</vowel>
+        <consonant>an</consonant>
+    </word>
+
+    <word>
+        <char>敲</char>
+        <vowel>h</vowel>
+        <consonant>aau</consonant>
+    </word>
+
+    <word>
+        <char>水</char>
+        <vowel>s</vowel>
+        <consonant>eoi</consonant>
+    </word>
+
+    <word>
+        <char>針</char>
+        <vowel>z</vowel>
+        <consonant>am</consonant>
+    </word>
+
+    <word>
+        <char>油</char>
+        <vowel>j</vowel>
+        <consonant>au</consonant>
+    </word>
+
+    <word>
+        <char>蛙</char>
+        <vowel>w</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Word Recorder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="complete">完成</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="default_age">8</string>
+    <string name="description_name">Tag For Name</string>
+    <string name="description_age">Tag For Age</string>
+    <string name="description_gender">Tag For Gender</string>
+    <string name="instruction">請讀出以下文字</string>
+    <string name="btn_next">Next Word</string>
+    <string name="warning">請填妥您的名字</string>
+    <string name="confirm">確定</string>
+    <string name="title_activity_record">RecordActivity</string>
+    <string name="title_activity_complete">Complete</string>
+    <string name="congrats">你已完成所有字的錄音，多謝參與!</string>
+    <string name="restart">重新開始</string>
+
+</resources>

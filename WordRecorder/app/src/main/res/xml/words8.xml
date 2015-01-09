@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>變</char>
+        <vowel>b</vowel>
+        <consonant>in</consonant>
+    </word>
+
+    <word>
+        <char>箍</char>
+        <vowel>k</vowel>
+        <consonant>u</consonant>
+    </word>
+
+    <word>
+        <char>掟</char>
+        <vowel>d</vowel>
+        <consonant>eng</consonant>
+    </word>
+
+    <word>
+        <char>機</char>
+        <vowel>g</vowel>
+        <consonant>ei</consonant>
+    </word>
+
+    <word>
+        <char>他</char>
+        <vowel>t</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>柯</char>
+        <vowel>o</vowel>
+        <consonant>o</consonant>
+    </word>
+
+    <word>
+        <char>削</char>
+        <vowel>s</vowel>
+        <consonant>oek</consonant>
+    </word>
+
+    <word>
+        <char>叉</char>
+        <vowel>c</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>鑊</char>
+        <vowel>w</vowel>
+        <consonant>ok</consonant>
+    </word>
+
+    <word>
+        <char>外</char>
+        <vowel>ng</vowel>
+        <consonant>oi</consonant>
+    </word>
+
+</resources>

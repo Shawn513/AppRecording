@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <word>
+        <char>豆</char>
+        <vowel>d</vowel>
+        <consonant>au</consonant>
+    </word>
+
+    <word>
+        <char>啤</char>
+        <vowel>b</vowel>
+        <consonant>e</consonant>
+    </word>
+
+    <word>
+        <char>糖</char>
+        <vowel>t</vowel>
+        <consonant>ong</consonant>
+    </word>
+
+    <word>
+        <char>心</char>
+        <vowel>s</vowel>
+        <consonant>am</consonant>
+    </word>
+
+    <word>
+        <char>嘔</char>
+        <vowel>a</vowel>
+        <consonant>au</consonant>
+    </word>
+
+    <word>
+        <char>跨</char>
+        <vowel>kw</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>吉</char>
+        <vowel>g</vowel>
+        <consonant>at</consonant>
+    </word>
+
+    <word>
+        <char>車</char>
+        <vowel>c</vowel>
+        <consonant>e</consonant>
+    </word>
+
+    <word>
+        <char>啦</char>
+        <vowel>l</vowel>
+        <consonant>aa</consonant>
+    </word>
+
+    <word>
+        <char>威</char>
+        <vowel>w</vowel>
+        <consonant>ai</consonant>
+    </word>
+
+</resources>

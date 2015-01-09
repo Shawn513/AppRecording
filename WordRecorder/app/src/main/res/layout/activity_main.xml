@@ -1,0 +1,145 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:background="@drawable/wallpaper">
+
+    <TextView android:text="@string/app_name" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="24sp"
+        android:textColor="#000000"
+        android:layout_marginBottom="20sp" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_name"
+                android:src="@drawable/name"
+                android:contentDescription="@string/description_name" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/field_name"
+                android:maxLines="1"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_age"
+                android:src="@drawable/age"
+                android:contentDescription="@string/description_age"
+                android:cropToPadding="true" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minus"
+                    android:id="@+id/btn_minus_age"
+                    android:layout_weight="0.2"
+                    android:onClick="minusAge" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:id="@+id/field_age"
+                    android:layout_weight="3"
+                    android:text="@string/default_age"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:editable="false" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/plus"
+                    android:id="@+id/btn_plus_age"
+                    android:layout_weight="0.2"
+                    android:onClick="plusAge" />
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_gender"
+                android:src="@drawable/gender"
+                android:contentDescription="@string/description_gender" />
+
+            <RadioGroup
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_column="1"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/field_gender">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/male"
+                    android:id="@+id/radio_male"
+                    android:checked="true"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#000000" />
+
+               <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/female"
+                    android:id="@+id/radio_female"
+                    android:checked="false"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_vertical"
+                   android:textColor="#000000" />
+            </RadioGroup>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/complete"
+        android:id="@+id/btn_complete"
+        android:textSize="20sp"
+        android:layout_gravity="end"
+        android:onClick="complete" />
+
+</LinearLayout>
