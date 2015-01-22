@@ -40,23 +40,21 @@ public class CompleteActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
+    public void restart(View v) {
+        Intent newIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(newIntent);
+        finish();
+    }
+
+    public void quit(View view) {
+        returnHome();
+    }
+
+    private void returnHome() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    public void restart(View v) {
-
-        Intent currentIntent = getIntent();
-        Intent newIntent = new Intent(getApplicationContext(), RecordActivity.class);
-
-        newIntent.putExtra("Name", currentIntent.getStringExtra("name"));
-        newIntent.putExtra("Age", currentIntent.getStringExtra("age"));
-        newIntent.putExtra("Gender", currentIntent.getCharExtra("gender", 'F'));
-        newIntent.putExtra("Selected", currentIntent.getIntegerArrayListExtra("Selected"));
-        startActivity(newIntent);
+        finish();
     }
 }

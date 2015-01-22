@@ -21,5 +21,6 @@
     <string name="title_activity_complete">Complete</string>
     <string name="congrats">你已完成所有字的錄音，多謝參與!</string>
     <string name="restart">重新開始</string>
-
+    <string name="btn_continue">繼續</string>
+    <string name="btn_quit">結束</string>
 </resources>

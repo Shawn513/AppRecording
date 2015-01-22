@@ -2,12 +2,9 @@ package com.gce.wordrecorder;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.media.AudioFormat;
+import android.content.res.Configuration;
 import android.media.AudioManager;
-import android.media.AudioRecord;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -15,19 +12,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -39,33 +34,31 @@ public class RecordActivity extends Activity {
 
     private ArrayList<Word> wordSet;
     private Word currentWord;
-    private AudioRecord recorder;
-    private Thread recordingThread;
     private boolean isRecording;
+    private boolean played;
     private int index;
 
     private String name;
     private char gender;
     private String age;
 
+    private Intent recordIntent;
+
     private Timestamp lastTimeStamp;
     private static final String model = Build.MODEL;
     private static final String filePath = Environment.getExternalStorageDirectory().getPath();
 
-    private static final int RECORDER_BPP = 16;
     private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
     private static final String AUDIO_RECORDER_FOLDER = "WordRecorder";
     private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
-    private static final int RECORDER_SAMPLE_RATE = 16000;
-    private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
-    private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-    private int bufferSize = 0;
 
-    private ArrayList<Integer> selected;
 
+    private TextView targetText;
     private ImageButton playButton;
+    private ImageButton recordButton;
     private Button nextButton;
 
+    private boolean recorded;
 
 
     @Override
@@ -73,41 +66,35 @@ public class RecordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("Selected")) {
-            selected = intent.getIntegerArrayListExtra("Selected");
-        } else {
-            selected = new ArrayList<>();
-        }
-
-        parseSource();
-
         // Retrieve user's personal information passed from main activity
+        Intent intent = getIntent();
         name = intent.getStringExtra("Name");
         gender = intent.getCharExtra("Gender", 'M');
         age = intent.getStringExtra("Age");
 
 
 
-
-        // Display the first word on the list
-        index = 0;
-        currentWord = wordSet.get(index);
-        TextView targetText = (TextView) findViewById(R.id.view_targetText);
-        targetText.setText(String.valueOf(currentWord.getWord()));
-
+        targetText = (TextView) findViewById(R.id.view_targetText);
         playButton = (ImageButton) findViewById(R.id.btn_playback);
-        playButton.setEnabled(false);
         nextButton = (Button) findViewById(R.id.btn_next);
-        nextButton.setEnabled(false);
+        recordButton = (ImageButton) findViewById(R.id.btn_record);
 
-        //  Set the buffer size for the
-        bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLE_RATE,
-                AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT);
+        if (savedInstanceState == null) {
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            parseSource();
+            // Display the first word on the list
+            index = 0;
+            currentWord = wordSet.get(index);
+            targetText.setText(String.valueOf(currentWord.getWord()));
+            playButton.setEnabled(false);
+            nextButton.setEnabled(false);
+
+        }
+
+        recorded = false;
+        played = false;
+        recordIntent = new Intent(this, Recorder.class);
+
     }
 
 
@@ -133,21 +120,60 @@ public class RecordActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    //  Back button is set to go to home page instead of the personal information form
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        if (isRecording) {
+            isRecording = false;
+            stopService(recordIntent);
+            Toast.makeText(getApplicationContext(), "Previous record is invalid, please record again.", Toast.LENGTH_SHORT).show();
+            recordButton.setImageResource(android.R.drawable.ic_btn_speak_now);
+            System.out.println(getLastFilename());
+            File file = new File(getLastFilename());
+            file.delete();
+        }
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.activity_record);
+        targetText = (TextView) findViewById(R.id.view_targetText);
+        targetText.setText(String.valueOf(currentWord.getWord()));
+        nextButton = (Button) findViewById(R.id.btn_next);
+        playButton = (ImageButton) findViewById(R.id.btn_playback);
+        recordButton = (ImageButton) findViewById(R.id.btn_record);
 
+        if (isRecording) {
+            recordButton.setImageResource(android.R.drawable.ic_media_pause);
+        }
+        if (!recorded) {
+            nextButton.setEnabled(false);
+            playButton.setEnabled(false);
+        } else if (!played) {
+            nextButton.setEnabled(false);
+        }
+    }
 
     public void toggleRecord(View v) {
         if (!isRecording) {
             playButton.setEnabled(false);
             nextButton.setEnabled(false);
             ((ImageButton)v).setImageResource(android.R.drawable.ic_media_pause);
-            startRecording();
+            isRecording = true;
+            if (recordIntent != null) {
+                recordIntent.putExtra("Filename", getFilename());
+                recordIntent.putExtra("TempFilename", getTempFilename());
+                startService(recordIntent);
+            }
+            Toast.makeText(getApplicationContext(), "Start recording...", Toast.LENGTH_SHORT).show();
         } else {
             ((ImageButton)v).setImageResource(android.R.drawable.ic_btn_speak_now);
-            stopRecording();
+            stopService(recordIntent);
             playButton.setEnabled(true);
-            nextButton.setEnabled(true);
+            isRecording = false;
+            recorded = true;
+            Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -155,7 +181,18 @@ public class RecordActivity extends Activity {
         MediaPlayer player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
+            final ImageButton recordButton = (ImageButton) findViewById(R.id.btn_record);
             player.setDataSource(this, Uri.parse("file://" + getLastFilename()));
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    nextButton.setEnabled(true);
+                    recordButton.setEnabled(true);
+                    played = true;
+                }
+            });
+            recordButton.setEnabled(false);
+            nextButton.setEnabled(false);
             player.prepare();
             player.start();
         } catch (IOException e1) {
@@ -166,6 +203,8 @@ public class RecordActivity extends Activity {
     public void nextWord(View v) {
 
         if (index < wordSet.size() - 1) {
+            recorded = false;
+            played = false;
             index ++;
             currentWord = wordSet.get(index);
             TextView targetText = (TextView) findViewById(R.id.view_targetText);
@@ -177,276 +216,77 @@ public class RecordActivity extends Activity {
             intent.putExtra("Name", name);
             intent.putExtra("Age", age);
             intent.putExtra("Gender", gender);
-            intent.putIntegerArrayListExtra("Selected", selected);
             startActivity(intent);
+            finish();
         }
 
     }
 
-    private void startRecording() {
-        deleteTempFile();
-        recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, RECORDER_SAMPLE_RATE, RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING, bufferSize);
+    private String getFilename() {
+        File file = new File(filePath, AUDIO_RECORDER_FOLDER);
 
-        int i = recorder.getState();
-        if(i==1)
-            recorder.startRecording();
-
-        isRecording = true;
-
-        recordingThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                writeAudioDataToFile();
-            }
-        },"AudioRecord Thread");
-
-        recordingThread.start();
-
-        Toast.makeText(getApplicationContext(), "Start recording...", Toast.LENGTH_SHORT).show();
-    }
-
-    private void stopRecording() {
-        if(recorder != null){
-            isRecording = false;
-
-            int i = recorder.getState();
-            if(i==1)
-                recorder.stop();
-            recorder.release();
-
-            recorder = null;
-            recordingThread = null;
-        }
-        copyWaveFile(getTempFilename(),getFilename());
-        deleteTempFile();
-
-        Toast.makeText(getApplicationContext(), "File saved", Toast.LENGTH_SHORT).show();
-    }
-
-
-    // Writing the raw audio data to a temporary file
-    private void writeAudioDataToFile() {
-        byte[] data = new byte[bufferSize];
-        String filename = getTempFilename();
-        FileOutputStream os = null;
-
-        try {
-            os = new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        int read;
-
-        if(null != os){
-            while(isRecording){
-                read = recorder.read(data, 0, bufferSize);
-
-                if(read != AudioRecord.ERROR_INVALID_OPERATION){
-                    try {
-                        os.write(data);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void deleteTempFile() {
-        File file = new File(getTempFilename());
-
-        file.delete();
-
-    }
-
-    //  Process the raw audio data and copy its content to the final wave file
-    private void copyWaveFile(String inFilename,String outFilename){
-        FileInputStream in;
-        FileOutputStream out;
-        long totalAudioLen;
-        long totalDataLen;
-        long longSampleRate = RECORDER_SAMPLE_RATE;
-        int channels = 1;
-        long byteRate = RECORDER_BPP * RECORDER_SAMPLE_RATE * channels/8;
-
-        byte[] data = new byte[bufferSize];
-
-        try {
-            in = new FileInputStream(inFilename);
-            out = new FileOutputStream(outFilename);
-            totalAudioLen = in.getChannel().size();
-            totalDataLen = totalAudioLen + 36;
-
-            //AppLog.logString("File size: " + totalDataLen);
-
-            WriteWaveFileHeader(out, totalAudioLen, totalDataLen,
-                    longSampleRate, channels, byteRate);
-
-            while(in.read(data) != -1){
-                out.write(data);
-            }
-
-            in.close();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //  Write the wave file header to the output stream
-    private void WriteWaveFileHeader(
-            FileOutputStream out, long totalAudioLen,
-            long totalDataLen, long longSampleRate, int channels,
-            long byteRate) throws IOException {
-
-        byte[] header = new byte[44];
-
-        header[0] = 'R';  // RIFF/WAVE header
-        header[1] = 'I';
-        header[2] = 'F';
-        header[3] = 'F';
-        header[4] = (byte) (totalDataLen & 0xff);
-        header[5] = (byte) ((totalDataLen >> 8) & 0xff);
-        header[6] = (byte) ((totalDataLen >> 16) & 0xff);
-        header[7] = (byte) ((totalDataLen >> 24) & 0xff);
-        header[8] = 'W';
-        header[9] = 'A';
-        header[10] = 'V';
-        header[11] = 'E';
-        header[12] = 'f';  // 'fmt ' chunk
-        header[13] = 'm';
-        header[14] = 't';
-        header[15] = ' ';
-        header[16] = 16;  // 4 bytes: size of 'fmt ' chunk
-        header[17] = 0;
-        header[18] = 0;
-        header[19] = 0;
-        header[20] = 1;  // format = 1
-        header[21] = 0;
-        header[22] = (byte) channels;
-        header[23] = 0;
-        header[24] = (byte) (longSampleRate & 0xff);
-        header[25] = (byte) ((longSampleRate >> 8) & 0xff);
-        header[26] = (byte) ((longSampleRate >> 16) & 0xff);
-        header[27] = (byte) ((longSampleRate >> 24) & 0xff);
-        header[28] = (byte) (byteRate & 0xff);
-        header[29] = (byte) ((byteRate >> 8) & 0xff);
-        header[30] = (byte) ((byteRate >> 16) & 0xff);
-        header[31] = (byte) ((byteRate >> 24) & 0xff);
-        header[32] = (byte) (2 * 16 / 8);  // block align
-        header[33] = 0;
-        header[34] = RECORDER_BPP;  // bits per sample
-        header[35] = 0;
-        header[36] = 'd';
-        header[37] = 'a';
-        header[38] = 't';
-        header[39] = 'a';
-        header[40] = (byte) (totalAudioLen & 0xff);
-        header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
-        header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
-        header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
-
-        out.write(header, 0, 44);
-    }
-
-    private String getFilename(){
-        File file = new File(filePath,AUDIO_RECORDER_FOLDER);
-
-
-        if(!file.exists()){
-            file.mkdirs();
-        }
         Timestamp timestamp = new Timestamp(new Date().getTime());
         lastTimeStamp = timestamp;
-        return (file.getAbsolutePath() + "/" + currentWord.getVowel() + "_" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + timestamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        if (!currentWord.getVowel().isEmpty()) {
+            return (file.getAbsolutePath() + "/" + currentWord.getVowel() + "_" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + timestamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        } else {
+            return (file.getAbsolutePath() + "/" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + timestamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        }
     }
 
     private String getLastFilename() {
         File file = new File(filePath,AUDIO_RECORDER_FOLDER);
 
-        file.mkdirs();
-        return (file.getAbsolutePath() + "/" + currentWord.getVowel() + "_" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + lastTimeStamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        if (!currentWord.getVowel().isEmpty()) {
+            return (file.getAbsolutePath() + "/" + currentWord.getVowel() + "_" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + lastTimeStamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        } else {
+            return (file.getAbsolutePath() + "/" + currentWord.getConsonant() + "_" + name + "_" + gender + "_" + age + "_" + model + "_" + lastTimeStamp + AUDIO_RECORDER_FILE_EXT_WAV);
+        }
     }
 
     private String getTempFilename(){
-        File file = new File(filePath,AUDIO_RECORDER_FOLDER);
 
-        file.mkdirs();
+        File tempFile = new File(filePath+"/"+AUDIO_RECORDER_FOLDER, AUDIO_RECORDER_TEMP_FILE);
 
-        File tempFile = new File(filePath,AUDIO_RECORDER_TEMP_FILE);
+        System.out.println(tempFile.getAbsolutePath());
+        return tempFile.getAbsolutePath();
 
-        if(tempFile.exists()) {
-            tempFile.delete();
-        }
-
-        return (file.getAbsolutePath() + "/" + AUDIO_RECORDER_TEMP_FILE);
     }
 
-    //  Parse the source xml containing the words and store it in an ArrayList of words
     private void parseSource() {
-
         //  Randomly select a word set for the user
-        int setNumber;
-        do {
-            setNumber = new Random().nextInt(14);
-        } while(selected.contains(setNumber));
+        ArrayList<String> fileList = getIntent().getStringArrayListExtra("FileList");
+        System.out.println("Size " + fileList.size());
+        int setNumber = new Random().nextInt(fileList.size());
 
-        TypedArray setIDs = getResources().obtainTypedArray(R.array.wordSets);
-        XmlPullParser parser = getResources().getXml(setIDs.getResourceId(setNumber, -1));
-
-        // Parse the xml resource (Subject to changes)
-        String character = null;
-        String vowel = null;
-        String consonant = null;
-        String text = null;
-        Word word;
         wordSet = new ArrayList<>();
 
-        int eventType = -1;
         try {
-            eventType = parser.getEventType();
-        } catch (XmlPullParserException e) {
+            FileInputStream input = openFileInput(fileList.get(setNumber));
+            byte[] data = new byte[input.available()];
+            input.read(data);
+            input.close();
+            String dataString = new String(data, "UTF-8");
+            JSONArray wordArr = new JSONObject(dataString).getJSONArray("words");
+
+            for (int i = 0; i < wordArr.length(); ++ i) {
+                String vowel;
+                String consonant;
+                char character;
+
+                JSONObject wordObj = wordArr.getJSONObject(i);
+                if (wordObj.has("vowel")) {
+                    vowel = wordObj.getString("vowel");
+                } else {
+                    vowel = "";
+                }
+                consonant = wordObj.getString("consonant");
+                character = wordObj.getString("char").charAt(0);
+                Word word = new Word(character, vowel, consonant);
+                wordSet.add(word);
+            }
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
-
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            if (eventType == XmlPullParser.END_TAG) {
-                String tagName = parser.getName().toLowerCase();
-                switch (tagName) {
-                    case "word":
-                        System.out.println("Vowel: " + vowel);
-                        word = new Word(character.charAt(0), vowel, consonant);
-                        wordSet.add(word);
-                        break;
-                    case "char":
-                        character = text;
-                        break;
-                    case "vowel":
-                        vowel = text;
-                        break;
-                    case "consonant":
-                        consonant = text;
-                        break;
-                }
-            } else if (eventType == XmlPullParser.TEXT) {
-                text = parser.getText();
-            }
-
-            try {
-                eventType = parser.next();
-            } catch (XmlPullParserException | IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        selected.add(setNumber);
     }
 }
